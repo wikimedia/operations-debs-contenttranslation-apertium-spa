@@ -1,0 +1,12 @@
+apertium-spa (0.1.0~r65494-1+wmf1) jessie-wikimedia; urgency=low
+
+  * Rebuild for Jessie.
+
+ -- Kartik Mistry <kartik@debian.org>  Thu, 16 Jun 2016 08:48:36 +0530
+
+apertium-spa (0.1.0~r65494-1) unstable; urgency=low
+
+  [ Tino Didriksen ]
+  * Initial release (Closes: #827387)
+
+ -- Kartik Mistry <kartik@debian.org>  Wed, 15 Jun 2016 22:17:02 +0530
