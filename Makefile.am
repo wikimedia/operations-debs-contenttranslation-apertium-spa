@@ -2,8 +2,8 @@
 ## Makefile for apertium-spa
 ###############################################################################
 
-RELEASE=0.1
-VERSION=0.1.0
+RELEASE=1.0
+VERSION=1.0.0
 LANG1=spa
 BASENAME=apertium-$(LANG1)
 
@@ -13,7 +13,8 @@ TARGETS_COMMON =			\
 	$(LANG1).autogen.bin		\
 	$(LANG1).autogen.att.gz		\
 	$(LANG1).autopgen.bin		\
-	$(LANG1).rlx.bin
+	$(LANG1).rlx.bin		\
+	$(LANG1).lrx.bin
 
 # Use this goal for creating .deps, otherwise make -j2 will give problems:
 @ap_include@
@@ -23,9 +24,11 @@ TARGETS_COMMON =			\
 ###############################################################################
 
 $(LANG1).autogen.bin: $(BASENAME).$(LANG1).dix
+	apertium-validate-dictionary $<
 	lt-comp rl $< $@
 
 $(LANG1).automorf.bin: $(BASENAME).$(LANG1).dix $(BASENAME).$(LANG1).acx
+	apertium-validate-dictionary $<
 	lt-comp lr $(BASENAME).$(LANG1).dix $@ $(BASENAME).$(LANG1).acx 
 
 $(LANG1).autogen.att.gz: $(LANG1).autogen.bin
@@ -36,6 +39,13 @@ $(LANG1).automorf.att.gz: $(LANG1).automorf.bin
 
 $(LANG1).autopgen.bin: $(BASENAME).post-$(LANG1).dix
 	lt-comp lr $< $@
+
+###############################################################################
+## Morph disambiguation rules 
+###############################################################################
+
+$(LANG1).lrx.bin: $(BASENAME).$(LANG1).lrx 
+	lrx-comp $< $@
 
 ###############################################################################
 ## Disambiguation rules 
@@ -51,6 +61,7 @@ EXTRA_DIST=$(BASENAME).$(LANG1).dix		\
 	   $(BASENAME).post-$(LANG1).dix	\
 	   $(BASENAME).$(LANG1).acx		\
 	   $(BASENAME).$(LANG1).rlx		\
+	   $(BASENAME).$(LANG1).lrx		\
            $(LANG1).prob			\
 	   modes.xml
 
@@ -77,7 +88,7 @@ modes/$(LANG1)-morph.mode: modes.xml
 
 noinst_DATA=modes/$(LANG1)-morph.mode
 
-install-data-local:
+install-data-local: install-modes
 	test -d $(DESTDIR)$(apertium_spa_srcdir) || mkdir -p $(DESTDIR)$(apertium_spa_srcdir)
 	$(INSTALL_DATA) $(BASENAME).$(LANG1).dix $(DESTDIR)$(apertium_spa_srcdir)
 	$(INSTALL_DATA) $(BASENAME).$(LANG1).rlx $(DESTDIR)$(apertium_spa_srcdir)
