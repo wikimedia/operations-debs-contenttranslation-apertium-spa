@@ -1,3 +1,9 @@
+apertium-spa (1.0.0~r77293-1+wmf1) jessie-wikimedia; urgency=low
+
+  * New upstream release.
+
+ -- Kartik Mistry <kartik@debian.org>  Thu, 06 Apr 2017 17:39:55 +0530
+
 apertium-spa (0.1.0~r65494-1+wmf1) jessie-wikimedia; urgency=low
 
   * Rebuild for Jessie.
