@@ -68,6 +68,7 @@ SET Pers = (p1) OR (p2) OR (p3) ;
 
 SET Ref = (prn pro ref) ;
 SET Pro = (prn pro) ;
+SET PrnTnPrs = (prn tn p1) OR (prn tn p2) OR (prn tn p3) ;
 
 SET Ant = (np ant) ;
 SET Cog = (np cog) ;
@@ -128,12 +129,19 @@ SET VerboSubj = ("querer") OR ("Querer") OR ("desear") OR ("Desear") OR ("propon
 # verbos Vblex que típicamente tienen predicativo
 SET VPred = ("considerar") OR ("Considerar") OR ("creer") OR ("Creer") OR ("opinar") OR ("Opinar") OR ("sentir") OR ("Sentir") OR ("hallar") OR ("Hallar") OR ("permanecer") OR ("Permanecer") OR ("continuar") OR ("Continuar") OR ("mantener") OR ("Mantener") OR ("resultar") OR ("Resultar") OR ("volver") OR ("Volver") ;
 
+SET AdjItgM = (adj itg m) ;
+SET PrnItgM = (adj itg m) ;
+
+SET Deber = ("deber") OR ("Deber");
 
 ###############################################################################
 #  Morphological disambiguation
 #
 
 SECTION
+
+REMOVE:r_cuanto_vblex_1 N IF (0 Vblex) (0 (n f)) (-1 AdjItgM) (-1 PrnItgM);
+SELECT:r_deber_vbmod_1 Vbmod IF (0 Deber) (1 (vblex inf)) (NOT 1 N);
 
 REMOVE:r_cog_1 Cog IF (-1 DetDef) (0 Cog) ;
 REMOVE:r_cog_2 Cog IF (-1 DetInd) (0 Cog) ;
@@ -159,6 +167,9 @@ SELECT:este_1 Det IF (0 ("Este") + $$MascSg) (-1 >>>) (1 N + $$MascSg) ;
 REMOVE:r_verb_1 Vblex (0 Vblex + Pers) (*1C Vblex + Pers BARRIER Cnj_Rel) ;
 # SELECT:r_verb_2 Vblex (0 Vblex + Pers) (-1C Pro) ; No: podría recurrir a ellas para hacer
 
+# prn + verbo/nombre
+SELECT:prn_vb_n Vblex IF (0 Vblex) (0 N) (-1 PrnTnPrs) ;
+
 # preposiciones / verbos
 # no tratamos "cabo" porque es muy infrecuente (+ nombre!, como "bajo", que también es adj)
 REMOVE:r_como_1 Vblex (0 ("como") OR ("Como")) (*-1 Vblex BARRIER Cnj_Rel) ;  # no funciona sempre
@@ -167,6 +178,7 @@ REMOVE:r_para_1 Vblex (0 ("para") OR ("Para")) (*-1 Vblex BARRIER Cnj_Rel) ;  # 
 REMOVE:r_para_4 Vblex (0 ("para") OR ("Para")) (*-1 Copula BARRIER Cnj_Rel);
 REMOVE:r_para_2 Vblex (0 ("para") OR ("Para")) (*1 Vblex BARRIER Cnj_Rel) ;
 SELECT:r_para_3 Prep (0 ("para") OR ("Para")) (1 Inf) ;
+SELECT:r_para_5 Prep IF (0 ("parir") OR ("Parir")) (0 Prep);
 REMOVE:r_salvo_1 Vblex (0 ("salvo") OR ("Salvo")) (*-1 Vblex BARRIER Cnj_Rel) ;  # no funciona sempre
 REMOVE:r_salvo_2 Vblex (0 ("salvo") OR ("Salvo")) (*1 Vblex BARRIER Cnj_Rel) ;
 REMOVE:r_sobre_1 Vblex (0 ("sobre") OR ("Sobre")) (*-1 Vblex BARRIER Cnj_Rel) ;  # no funciona sempre
