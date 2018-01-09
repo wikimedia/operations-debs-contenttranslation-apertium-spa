@@ -1,3 +1,9 @@
+apertium-spa (1.1.0~r79716-1+wmf2) jessie-wikimedia; urgency=low
+
+  * Updated dependency on cg3
+
+ -- Kartik Mistry <kartik@debian.org>  Tue, 09 Jan 2018 17:16:58 +0530
+
 apertium-spa (1.1.0~r79716-1+wmf1) jessie-wikimedia; urgency=low
 
   * New upstream release.
